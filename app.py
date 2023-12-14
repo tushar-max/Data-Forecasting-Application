@@ -20,8 +20,8 @@ def get_data():
     # Return the data in JSON format
     np_array = pivot_table.to_numpy().tolist()
     print(np_array)
-    return jsonify({'pivot':np_array})
-
+    # return jsonify({'pivot':np_array})
+    return jsonify({'pivot': np_array})
 @app.route('/',methods=['GET'])
 @cross_origin()
 def get_pt():
