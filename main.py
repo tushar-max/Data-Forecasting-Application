@@ -1,10 +1,5 @@
-from flask import Flask
+import pandas as pd
 
-app = Flask(__name__)
-
-@app.route('/')
-def hello():
-    return 'Hello, Flask!'
-
-if __name__ == '__main__':
-    app.run(debug=True)
+def pass_Cols():
+    df = pd.read_excel("Pivot Practice.xlsx",sheet_name="Sheet5")
+    return df.columns.tolist()
