@@ -44,14 +44,26 @@ input {
   border: 1px solid #bdc3c7; 
 }
 
-button {
-  padding: 15px;
-  background-color: #3498db;
-  color: white;
-  cursor: pointer;
-  border: none;
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-button:hover {
-  background-color: #2980b9;
+div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }

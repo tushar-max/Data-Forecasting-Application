@@ -1,126 +1,101 @@
 import logo from './logo.svg';
 import './App.css';
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// function App() {
-//   const [data,setData] = useState([]);
-//   const [pivotTable,setPivotTable] = useState([]);
-//   const [updateParams,setUpdateParams] = useState({
-//     i:-1,
-//     j:-1,
-//     val:0,
-//   });
-//   useEffect(()=>{
-//     fetchData();
-//   },[]);
-
-//   const fetchData = async ()=>{
-//     try{
-//       const response = await axios.get('http://127.0.0.1:8080');
-//       setPivotTable(response);
-//     }
-//     catch(error){
-//       console.log(error);
-//     }
-//   };
-
-//   const handleUpdateData = async () => {
-//     try {
-//       await axios.post('http://127.0.0.1:8080/updateData', updateParams);
-//       // Refresh data after updating
-//       fetchData();
-//       // Reset updateParams to default values
-//       setUpdateParams({ i: 0, j: 0, val: 0 });
-//     } catch (error) {
-//       console.error('Error updating data:', error);
-//     }
-//   };
-
-//   return (
-//     <div className="App">
-//       <h1>Forecasting Frontend</h1>
-//       <div>
-//         <h2>Pivot Table</h2>
-//         <pre>{JSON.stringify(pivotTable, null, 2)}</pre>
-//       </div>
-//       <div>
-//         <h2>Update Data</h2>
-//         <label>
-//           i:
-//           <input type="number" value={updateParams.i} onChange={(e) => setUpdateParams({ ...updateParams, i: parseInt(e.target.value) })} />
-//         </label>
-//         <label>
-//           j:
-//           <input type="number" value={updateParams.j} onChange={(e) => setUpdateParams({ ...updateParams, j: parseInt(e.target.value) })} />
-//         </label>
-//         <label>
-//           val:
-//           <input type="number" value={updateParams.val} onChange={(e) => setUpdateParams({ ...updateParams, val: parseInt(e.target.value) })} />
-//         </label>
-//         <button onClick={handleUpdateData}>Update Data</button>
-//       </div>
-//     </div>
-//   );
-// }
-
 function App() {
-  const [pivotTable, setPivotTable] = useState([]);
   const [updateParams, setUpdateParams] = useState({
     columns: [],
     data: [],
     index: [],
+    rows: [],
+    allcolumns: [],
     i: -1,
     j: -1,
     val: 0,
   });
-
+  const [attributes, setAttributes] = useState({ rows: [], column: [], value: '' });
+  const [showForm, SetShowForm] = useState(false);
   useEffect(() => {
     fetchData();
-  }, []);
-
+  }, [attributes]);
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8080');
-      setPivotTable(response.data);
+      const response = await axios.post('http://127.0.0.1:8080', attributes);
+      // setPivotTable(response.data);
+      // console.log(response.data);
+      // alert(response.data);
       setUpdateParams({
         ...updateParams,
         columns: response.data.columns,
+        rows: response.data.rows,
         data: response.data.data,
         index: response.data.index,
+        allcolumns: response.data.allcolumns,
+
       });
     } catch (error) {
       console.log(error);
     }
   };
-
   const handleUpdateData = async () => {
     try {
       await axios.post('http://127.0.0.1:8080/updateData', updateParams);
       // Refresh data after updating
       fetchData();
       // Reset updateParams to default values
-      setUpdateParams({ columns: [], data: [], index: [], i: -1, j: -1, val: 0 });
+      setUpdateParams({ columns: [], data: [], index: [], rows: [], i: -1, j: -1, val: 0 });
     } catch (error) {
       console.error('Error updating data:', error);
     }
   };
 
+  const handleAttributeGroupChange = (group, value) => {
+    const tempAttributes = attributes;
+    if (group === 'value') {
+      tempAttributes[group] = value;
+    }
+    else {
+      tempAttributes[group].push(value);
+    }
+    setAttributes(tempAttributes);
+    console.log(attributes);
+  }
+  const handleShowForm = ()=>{
+    SetShowForm(!showForm);
+  }
   return (
     <div className="App">
       <h1>Forecasting App</h1>
+      {showForm && <button className='btn btn-danger' onClick={handleShowForm}>Collapse</button>}
+      {!showForm && <button className='btn btn-info' onClick={handleShowForm}>Set Attributes</button>}
+      {
+        showForm &&
+        <form>
+          {updateParams.allcolumns.map((attribute) => (
+            <div key={attribute}>
+              <label>
+                {attribute}:
+                <select onChange={(e) => handleAttributeGroupChange(e.target.value, attribute)}>
+                  <option value="">None</option>
+                  <option value="rows">Row</option>
+                  <option value="column">Column</option>
+                  <option value="value">Value</option>
+                </select>
+              </label>
+            </div>
+          ))}
+          <button className='btn btn-primary' onClick={fetchData}>Fetch</button>
+        </form>
+      }
 
       <div>
-        <h2>Pivot Table</h2>
-        {/* <pre>{JSON.stringify(updateParams.columns, null, 2)}</pre> */}
-        {/* <pre>{JSON.stringify(pivotTable.data, null, 2)}</pre> */}
-        {/* <pre>{JSON.stringify(updateParams.index, null, 2)}</pre> */}
         <table>
           <thead>
             <tr>
-              <th>Country</th>
-              <th>Gender</th>
-              <th>Age-Group</th>
+              {updateParams.rows.map((val, index) => (
+                <th key={index}>{val}</th>
+              ))}
               {updateParams.columns.map((year, index) => (
                 <th key={index}>{year}</th>
               ))}
