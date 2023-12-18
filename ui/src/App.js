@@ -61,9 +61,24 @@ function App() {
     setAttributes(tempAttributes);
     console.log(attributes);
   }
-  const handleShowForm = ()=>{
+  const handleShowForm = () => {
     SetShowForm(!showForm);
   }
+
+
+  function isArray2D(arr) {
+    if (!Array.isArray(arr)) {
+      return false;
+    }
+
+    for (let element of arr) {
+      if (!Array.isArray(element)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   return (
     <div className="App">
       <h1>Forecasting App</h1>
@@ -96,9 +111,18 @@ function App() {
               {updateParams.rows.map((val, index) => (
                 <th key={index}>{val}</th>
               ))}
-              {updateParams.columns.map((year, index) => (
+              {!isArray2D(updateParams.columns) && updateParams.columns.map((year, index) => (
                 <th key={index}>{year}</th>
               ))}
+              {/* {isArray2D(updateParams.columns) && (
+                updateParams.columns.map((rowData, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {rowData.map((value, colIndex) => (
+                      <th key={colIndex}>{value}</th>
+                    ))}
+                  </tr>
+                ))
+              )} */}
             </tr>
           </thead>
           <tbody>
@@ -107,7 +131,7 @@ function App() {
                 {rowData.map((value, colIndex) => (
                   <td key={colIndex}>{value}</td>
                 ))}
-                {updateParams.data[rowIndex].map((cellValue, colIndex) => (
+                {isArray2D(updateParams.data) && updateParams.data[rowIndex].map((cellValue, colIndex) => (
                   <td key={colIndex}>{cellValue}</td>
                 ))}
               </tr>
