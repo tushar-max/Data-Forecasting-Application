@@ -49,10 +49,24 @@
     background-color: #3498db;
     color: white;
     cursor: pointer;
-    border: none;
+    border-radius: 0.5;
+    max-width:max-content;
   }
   
   button:hover {
-    background-color: #2980b9;
+    background-color: #0751b9;
   }
+  div {
+    text-align: center;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); 
+}
+/* body {
   
+  height: 100vh;
+  margin: 1200;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to right, #74ebd5, #ACB6E5); 
+} */
