@@ -19,9 +19,14 @@ value = ''
 @cross_origin()
 def update_data():
     data = request.get_json()
+    print(data)
     Tr= data['row']
     Tc=data['col']
-    ratio = data['newValue']/data['oldData']
+    if data['oldData']==0:
+        ratio = data['newValue']
+    else:
+        ratio = data['newValue']/data['oldData']
+    
     print(Tr,Tc,ratio)
     # print(type(Tr),type(Tc),type(ratio))
     df = pd.read_excel("Pivot Practice.xlsx",sheet_name="Sheet5")
@@ -29,20 +34,25 @@ def update_data():
     if isinstance(Tr,list):
         idx=0
         for i in Tr:
-            mask &= (df[rows[idx]]==i)
+            if i!='' and i!="Total":
+                mask &= (df[rows[idx]]==i)
             idx+=1
     else:
          mask &= (df[rows[0]]==Tr)
     if isinstance(column,list):
         idx=0
         for i in Tc:
-            mask &= (df[column[idx]]==i)
+            if i!='' and i!="Total":
+                mask &= (df[column[idx]]==i)
             idx+=1
     else:
          mask &= (df[column[0]]==Tc)
     # print(mask)
     print(df.loc[mask,value] * ratio)
-    df.loc[mask,value] =df.loc[mask,value] * ratio
+    if data['oldData']==0:
+        df.loc[mask,value] = ratio
+    else:
+        df.loc[mask,value] =df.loc[mask,value] * ratio
     df.to_excel("Pivot Practice.xlsx",sheet_name="Sheet5",index=False)
     return jsonify(True)
 

@@ -16,6 +16,7 @@ function App() {
   });
   const [attributes, setAttributes] = useState({ rows: [], column: [], value: '' });
   const [showForm, SetShowForm] = useState(false);
+  const [edit,setEdit] = useState(false);
   const [editedData, setEditedData] = useState({
     rowIndex: -1,
     colIndex: -1,
@@ -43,6 +44,11 @@ function App() {
       console.log(error);
     }
   };
+
+  const handleEdit = async()=>{
+    setEdit(!edit);
+  }
+
   const handleUpdateData = async () => {
     try {
       if (editedData.colIndex == -1 || editedData.rowIndex == -1) {
@@ -51,13 +57,13 @@ function App() {
       else {
         console.log( {
           "col": updateParams.columns[editedData.colIndex],
-          "row": updateParams.rows[editedData.rowIndex], "oldData": updateParams.data[editedData.rowIndex][editedData.colIndex],
-          "newValue": editedData.value
+          "row": updateParams.index[editedData.rowIndex], "oldData": editedData.value,
+          "newValue": updateParams.data[editedData.rowIndex][editedData.colIndex]
         });
         await axios.post('http://127.0.0.1:8080/updateData', {
           "col": updateParams.columns[editedData.colIndex],
-          "row": updateParams.rows[editedData.rowIndex], "oldData": updateParams.data[editedData.rowIndex][editedData.colIndex],
-          "newValue": editedData.value
+          "row": updateParams.index[editedData.rowIndex],  "oldData": editedData.value,
+          "newValue": updateParams.data[editedData.rowIndex][editedData.colIndex]
         });
         fetchData();
       }
@@ -137,7 +143,11 @@ function App() {
           <button className='btn btn-primary' onClick={fetchData}>Fetch</button>
         </form>
       }
-
+      <div className="container buttons-container">
+        {edit &&<button onClick={handleEdit} className="btn btn-danger">Make Read-only</button>}
+        {!edit && <button onClick={handleEdit} className="btn btn-info">Edit</button>} &nbsp;
+        <button className="btn btn-primary">Copy Data</button>
+      </div>
       <div>
         <table>
           <thead>
@@ -156,7 +166,17 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {updateParams.index.map((rowData, rowIndex) => (
+          {!edit && updateParams.index.map((rowData, rowIndex) => (
+              <tr key={rowIndex}>
+                {rowData.map((value, colIndex) => (
+                  <td key={colIndex}>{value}</td>
+                ))}
+                {isArray2D(updateParams.data) && updateParams.data[rowIndex].map((cellValue, colIndex) => (
+                  <td key={colIndex}>{cellValue}</td>
+                ))}
+              </tr>
+            ))}
+            {edit && updateParams.index.map((rowData, rowIndex) => (
               <tr key={rowIndex}>
                 {rowData.map((value, colIndex) => (
                   <td key={colIndex}>{value}</td>
@@ -170,10 +190,10 @@ function App() {
                       // onChange={(e) => setUpdateParams({ ...updateParams, cellValue: parseInt(e.target.value) })}
                       onChange={(e) => {
                         const newData = [...updateParams.data];
+                        let oldData = newData[rowIndex][colIndex]
                         newData[rowIndex][colIndex] = parseInt(e.target.value);
-                        const value = parseInt(e.target.value);
                         // setUpdateParams({ ...updateParams, data: newData });
-                        setEditedData({ rowIndex: rowIndex, colIndex: colIndex, value: value})
+                        setEditedData({ rowIndex: rowIndex, colIndex: colIndex, value: oldData})
                       }}
                     />
                   </label>
@@ -183,36 +203,7 @@ function App() {
             ))}
           </tbody>
         </table>
-      </div>
-
-      <div>
-        <h2>Update Data</h2>
-        <label>
-          i:
-          <input
-            type="number"
-            value={updateParams.i}
-            onChange={(e) => setUpdateParams({ ...updateParams, i: parseInt(e.target.value) })}
-          />
-        </label>
-        <label>
-          j:
-          <input
-            type="number"
-            value={updateParams.j}
-            onChange={(e) => setUpdateParams({ ...updateParams, j: parseInt(e.target.value) })}
-          />
-        </label>
-        <label>
-          val:
-          <input
-            type="number"
-            value={updateParams.val}
-            onChange={(e) => setUpdateParams({ ...updateParams, val: parseInt(e.target.value) })}
-          />
-        </label>
-        <button onClick={handleUpdateData}>Update Data</button>
-      </div>
+      </div>  
     </div>
   );
 }

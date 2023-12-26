@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  /* text-align: center; */
   padding: 20px;
 }
 
@@ -66,4 +66,10 @@ select {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+}
+
+
+.buttons-container{
+  margin-top: 10px;
+  margin-left: 10px;
 }
