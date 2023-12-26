@@ -15,6 +15,37 @@ column = []
 value = ''
 
 
+@app.route('/updateData',methods=['POST'])
+@cross_origin()
+def update_data():
+    data = request.get_json()
+    Tr= data['row']
+    Tc=data['col']
+    ratio = data['newValue']/data['oldData']
+    print(Tr,Tc,ratio)
+    # print(type(Tr),type(Tc),type(ratio))
+    df = pd.read_excel("Pivot Practice.xlsx",sheet_name="Sheet5")
+    mask = pd.Series(True, index=df.index)
+    if isinstance(Tr,list):
+        idx=0
+        for i in Tr:
+            mask &= (df[rows[idx]]==i)
+            idx+=1
+    else:
+         mask &= (df[rows[0]]==Tr)
+    if isinstance(column,list):
+        idx=0
+        for i in Tc:
+            mask &= (df[column[idx]]==i)
+            idx+=1
+    else:
+         mask &= (df[column[0]]==Tc)
+    # print(mask)
+    print(df.loc[mask,value] * ratio)
+    df.loc[mask,value] =df.loc[mask,value] * ratio
+    df.to_excel("Pivot Practice.xlsx",sheet_name="Sheet5",index=False)
+    return jsonify(True)
+
 @app.route('/getColumns',methods=['POST'])
 @cross_origin()
 def get_columns():
@@ -28,7 +59,7 @@ def get_columns():
 def get_pt():
     global rows,column,value
     data = request.get_json()
-    print(data)
+    # print(data)
     df = pd.read_excel("Pivot Practice.xlsx",sheet_name="Sheet5")
     if data['value']=='' and value=='':
         return {'columns': [],
