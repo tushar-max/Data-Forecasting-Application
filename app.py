@@ -15,6 +15,18 @@ column = []
 value = ''
 
 
+@app.route('/copyData',methods=['POST'])
+@cross_origin()
+def copy_data():
+    try:
+        data = request.get_json()
+        print(data)
+        df = pd.read_excel("Pivot Practice.xlsx",sheet_name="Sheet5")
+        copy_data_helper(df,data['last_col_name'],data['new_col_name'],column[0])
+        return jsonify(True)
+    except Exception as e:
+        return jsonify(e)
+
 @app.route('/updateData',methods=['POST'])
 @cross_origin()
 def update_data():

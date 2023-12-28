@@ -1,5 +1,13 @@
 import pandas as pd
 
+def copy_data_helper(df,last_col_name,new_col_name,column):
+    mask = df[column]==last_col_name
+    temp = df[mask]
+    temp.loc[mask,column]= new_col_name
+    final_df = pd.concat([df,temp],axis=0)
+    final_df.to_excel("Pivot Practice.xlsx",sheet_name="Sheet5",index=False)
+    return True
+
 def helper(lst):
     if not isinstance(lst[0],tuple):
         return [[ele] for ele in lst]
