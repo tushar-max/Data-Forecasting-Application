@@ -128,9 +128,10 @@ function App() {
   }
   function handle2DColumn(lst) {
     return lst.map((item, i) => (
+
       <span key={i}>
         {item}
-        {i < lst.length - 1 && <br />} {"--"}
+        {i < lst.length - 1 && <br /> && <hr/>}
       </span>
     ));
   }
@@ -141,7 +142,7 @@ function App() {
     }
 
     for (let element of arr) {
-      if (!Array.isArray(element)) {
+      if (element.length==1) {
         return false;
       }
     }
@@ -150,12 +151,16 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Forecasting App</h1>
+      <nav class="navbar navbar-expand-lg sticky-top nav">
+      <h1 >Forecasting App</h1>
+      </nav>
+      <div className='m-2'>
+
       {showForm && <button className='btn btn-danger' onClick={handleShowForm}>Collapse</button>}
-      {!showForm && <button className='btn btn-info' onClick={handleShowForm}>Set Attributes</button>}
+      {!showForm && <button className='btn btn-set' onClick={handleShowForm}>Set Attributes</button>}
       {
         showForm &&
-        <form>
+        <form className='card card-body form'>
           {updateParams.allcolumns.map((attribute) => (
             <div key={attribute}>
               <label>
@@ -169,16 +174,16 @@ function App() {
               </label>
             </div>
           ))}
-          <button className='btn btn-primary' onClick={fetchData}>Fetch</button>
+          <button className='btn btn-fetch' onClick={fetchData}>Fetch</button>
         </form>
       }{updateParams.data.length==0&&
         <div>
-          <h1>No Data Available</h1></div>}
+          <h4 className='mt-2'>No Data Available</h4></div>}
       {updateParams.data.length!=0 && <>
-      <div className="container buttons-container">
+      <div className=" buttons-container">
         {edit && <button onClick={handleEdit} className="btn btn-danger">Make Read-only</button>}
-        {!edit && <button onClick={handleEdit} className="btn btn-info">Edit</button>} &nbsp;
-        {!showCopyData && <button onClick={handleShowCopyData} className="btn btn-primary">Copy Data</button>}
+        {!edit && <button onClick={handleEdit} className="btn btn-default">Edit</button>} &nbsp;
+        {!showCopyData && <button onClick={handleShowCopyData} className="btn btn-default">Copy Data</button>}
         {showCopyData &&<> <input
           type="text"
           placeholder='Enter column name'
@@ -245,13 +250,14 @@ function App() {
                       }}
                     />
                   </label>
-                    <button onClick={handleUpdateData}>Update Data</button></td>
+                    <button onClick={handleUpdateData} className='btn btn-default'>Update Data</button></td>
                 ))}
               </tr>
             ))}
           </tbody>
         </table>
       </div></>}
+      </div>
     </div>
   );
 }

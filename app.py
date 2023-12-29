@@ -81,7 +81,7 @@ def get_columns():
 def get_pt():
     global rows,column,value
     data = request.get_json()
-    # print(data)
+    print(data)
     df = pd.read_excel("Pivot Practice.xlsx",sheet_name="Sheet5")
     if data['value']=='' and value=='':
         return {'columns': [],
