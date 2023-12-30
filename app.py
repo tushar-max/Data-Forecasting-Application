@@ -14,6 +14,40 @@ rows = []
 column = []
 value = ''
 
+@app.route('/getDf',methods=['POST'])
+@cross_origin()
+def getDf():
+    try:
+        df = pd.read_excel("Pivot Practice.xlsx",sheet_name="Sheet5")
+        temp = df.to_dict(orient='split')
+        return jsonify(temp)
+    except:
+        return jsonify(False)
+
+@app.route('/addRow', methods= ['POST'])
+@cross_origin()
+def addRow():
+    try:
+        data = request.get_json()
+        print(data)
+        df = pd.read_excel("Pivot Practice.xlsx", sheet_name="Sheet5")
+        final_df = pd.concat([df, pd.DataFrame([data], columns=df.columns)], axis=0, ignore_index=True)
+        final_df.to_excel("Pivot Practice.xlsx",sheet_name="Sheet5",index=False)
+        return jsonify(True)
+    except:
+        return jsonify(False)
+ 
+ 
+@app.route('/setLabels',methods=['POST'])
+@cross_origin()
+def setLabels():
+    try:
+        data = request.get_json()
+        df = pd.DataFrame(columns=data)
+        df.to_excel("Pivot Practice.xlsx",sheet_name="Sheet5",index=False)
+        return jsonify(True)
+    except:
+        return jsonify(False)
 
 @app.route('/copyData',methods=['POST'])
 @cross_origin()
@@ -22,7 +56,7 @@ def copy_data():
         data = request.get_json()
         print(data)
         df = pd.read_excel("Pivot Practice.xlsx",sheet_name="Sheet5")
-        copy_data_helper(df,data['last_col_name'],data['new_col_name'],column[0])
+        copy_data_helper(df,data['last_col_name'],data['new_col_name'],column)
         return jsonify(True)
     except Exception as e:
         return jsonify(e)
@@ -60,9 +94,16 @@ def update_data():
     else:
          mask &= (df[column[0]]==Tc)
     # print(mask)
-    print(df.loc[mask,value] * ratio)
-    if data['oldData']==0:
-        df.loc[mask,value] = ratio
+    # print(df.loc[mask,value] * ratio)
+    if data['oldData']==0 and df.loc[mask,value].empty:
+        temp_dic = {}
+        for i in range(len(rows)):
+            temp_dic[rows[i]]=Tr[i]
+        for i in range(len(column)):
+            temp_dic[column[i]]=Tc[i]
+        temp_dic[value] = ratio
+        print(temp_dic)
+        df.loc[len(df)] = temp_dic
     else:
         df.loc[mask,value] =df.loc[mask,value] * ratio
     df.to_excel("Pivot Practice.xlsx",sheet_name="Sheet5",index=False)

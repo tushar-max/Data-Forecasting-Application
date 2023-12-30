@@ -1,9 +1,14 @@
 import pandas as pd
 
 def copy_data_helper(df,last_col_name,new_col_name,column):
-    mask = df[column]==last_col_name
+    mask = df[column[0]]==last_col_name[0]
+    for i in range (len(column)):
+        if i==0:
+            pass
+        mask &=df[column[i]]==last_col_name[i]
     temp = df[mask]
-    temp.loc[mask,column]= new_col_name
+    for i in range (len(column)):
+        temp.loc[mask,column[i]]= new_col_name[i]
     final_df = pd.concat([df,temp],axis=0)
     final_df.to_excel("Pivot Practice.xlsx",sheet_name="Sheet5",index=False)
     return True
@@ -20,7 +25,7 @@ def subtotals(pt,df,row,col,value):
     data_ = temp['data']
     column = temp['columns']
     column = helper(column)
-    # index_ = helper(index_)
+    index_ = helper(index_)
     res_index = []
     res_data = []
     curr_idx=0
@@ -64,6 +69,7 @@ def subtotals(pt,df,row,col,value):
                         temp&=(df[col[element]]==column[j][element])
                     # print(df.loc[temp,value].sum())
                     data.append(df.loc[temp,value].sum())
+                data[-1]=(df.loc[mask,value].sum())
                 res_index.append((index_[curr_idx+1][:i+1]+('',)*(mod-len(index_[curr_idx+1][:i+1])+1)))
                 res_data.append(data)
         res_index.append(index_[curr_idx+1])
