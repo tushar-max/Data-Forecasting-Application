@@ -1,17 +1,21 @@
 .App {
-  text-align: center;
-  padding: 20px;
+  /* text-align: center; */
+  /* padding: 20px; */
 }
 
 h1 {
-  color: #3498db; 
-  font-size: 2em;
-  margin-bottom: 20px;
+  color: #fff;
+  font-size: 24px;
+  margin: 2px;
 }
 
 h2 {
   margin-top: 20px;
 }
+
+/* .btn{
+  margin-left: 6px;
+} */
 
 table {
   width: 100%;
@@ -44,14 +48,76 @@ input {
   border: 1px solid #bdc3c7; 
 }
 
-button {
-  padding: 15px;
-  background-color: #3498db;
-  color: white;
-  cursor: pointer;
-  border: none;
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-button:hover {
-  background-color: #2980b9;
+div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+
+.buttons-container{
+  margin-top: 10px;
+  margin-left: 0px;
+}
+
+.nav{
+  display: flex;
+  justify-content: center;
+  padding: 0.2rem 0.4rem;
+  background-color: #3498db; 
+}
+
+.btn-set{
+  background-color: #3498db; 
+  color: #fff;
+}
+
+.btn-set:hover{
+  background-color: #3498db; 
+  color: #fff;
+}
+
+.form{
+  background-color: #3498db; 
+  color: #fff;
+}
+
+.btn-fetch{
+  border: 2px solid #fff;
+  color: #fff;
+  background-color: #20597c; 
+}
+
+.btn-fetch:hover{
+  border: 2px solid #fff;
+  color: #fff;
+  background-color: #20597c; 
+}
+
+.btn-default{
+  background-color: #3498db; 
+  color: #fff;
+}
+
+.btn-default:hover{
+  background-color: #3498db; 
+  color: #fff;
 }
