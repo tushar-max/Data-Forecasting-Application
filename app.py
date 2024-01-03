@@ -156,7 +156,8 @@ def get_pt():
     # temp['allcolumns'] = df.columns.tolist()
     temp = subtotals(pivot_table,df,rows,column,value)
     temp['data'] = [
-        [int(cell) if isinstance(cell, (int, np.int64)) else cell for cell in row] for row in temp['data']
+        # [int(cell) if isinstance(cell, (int, np.int64)) else cell for cell in row] for row in temp['data']
+        [round(cell, 2) if isinstance(cell, (float)) else int(cell) if isinstance(cell, (int, np.int64)) else cell for cell in row] for row in temp['data']
     ]
     return jsonify(temp)
     # return {'columns': [],
