@@ -53,6 +53,7 @@ function Home() {
 
             });
             setInputData(Array.from({ length: response.data.columns[0].length }, () => ''))
+            setTempData(cloneDeep(response.data.data));
             // console.log(inputData);
             // console.log(updateParams.data);
             // console.log("-------------");

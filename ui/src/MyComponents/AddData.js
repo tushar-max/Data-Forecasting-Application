@@ -66,6 +66,10 @@ function AddData() {
     const handleShowAddRow = async () => {
         setShowAddRow(!showAddRow);
     }
+    const handleClearData = async()=>{
+        const response = await axios.post('http://127.0.0.1:8080/clearData');
+        getDf();
+    }
     return (
         <div>
             <nav className="navbar navbar-expand-lg sticky-top nav">
@@ -75,6 +79,7 @@ function AddData() {
                 {data.columns.length === 0 && showAddLabels && <button className="btn btn-danger ms-auto" onClick={handleShowAddLabels}>Collapse</button>}
                 {data.columns.length !== 0 && !showAddRow && <button className="btn btn-primary ms-auto" onClick={handleShowAddRow}>Add Row</button>}
                 {showAddRow && <button className="btn btn-danger ms-auto" onClick={handleShowAddRow}>Collapse</button>}
+                <button className="btn btn-danger" onClick={handleClearData}>Clear All Data</button>
             </nav>
 
             {data.columns.length===0 && showAddLabels && <div>

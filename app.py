@@ -105,7 +105,10 @@ def update_data():
         print(temp_dic)
         df.loc[len(df)] = temp_dic
     else:
-        df.loc[mask,value] =df.loc[mask,value] * ratio
+        if data['oldData']==0:
+            df.loc[mask,value] =ratio/len(df.loc[mask,value])
+        else:
+            df.loc[mask,value] =df.loc[mask,value] * ratio
     df.to_excel("Pivot Practice.xlsx",sheet_name="Sheet5",index=False)
     return jsonify(True)
 
@@ -116,6 +119,18 @@ def get_columns():
     print(data)
     return data
 
+@app.route('/clearData',methods=['POST'])
+@cross_origin()
+def clear_data():
+    try:
+        df = pd.DataFrame()
+        df.to_excel("Pivot Practice.xlsx",sheet_name="Sheet5",index=False)
+        rows=[]
+        column=[]
+        value=''
+        return jsonify(True)
+    except:
+        return jsonify(False)
 
 @app.route('/',methods=['POST'])
 @cross_origin()
